@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RedConnect</title>
+<link rel="stylesheet" href="style.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+<!-- Start Screen -->
+<div id="start-screen" class="screen active full-screen">
+  <div class="start-content">
+    <h1>RedConnect</h1>
+    <p>Full-Stack and ML-Enabled Centralized Blood Request System</p>
+    <button id="enter-btn">Enter App</button>
+  </div>
+</div>
+
+<!-- Auth Screen -->
+<div id="auth-screen" class="screen">
+  <div class="auth-content">
+    <h2>Welcome to RedConnect</h2>
+    <div class="auth-buttons">
+      <button id="login-btn">Login</button>
+      <button id="signup-btn">Signup</button>
+    </div>
+
+    <!-- Login Form -->
+    <form id="login-form" class="auth-form" style="display:none;">
+      <input type="email" id="login-email" placeholder="Email" required>
+      <input type="password" id="login-password" placeholder="Password" required>
+      <button type="submit">Login</button>
+      <div id="login-error" style="color:red; display:none;">Invalid credentials!</div>
+      <div class="switch">Don't have an account? <span id="to-signup">Signup</span></div>
+    </form>
+
+    <!-- Signup Form -->
+    <form id="signup-form" class="auth-form" style="display:none;">
+      <input type="text" id="signup-name" placeholder="Name" required>
+      <input type="email" id="signup-email" placeholder="Email" required>
+      <input type="password" id="signup-password" placeholder="Password" required>
+      <button type="submit">Signup</button>
+      <div id="signup-success" style="color:green; display:none;">Signup successful!</div>
+      <div class="switch">Already have an account? <span id="to-login">Login</span></div>
+    </form>
+  </div>
+</div>
+
+<!-- Main Dashboard -->
+<div id="main-screen" class="screen">
+  <header>
+    <h2>RedConnect Dashboard</h2>
+    <button id="menu-btn">Menu</button>
+  </header>
+
+  <div class="cards">
+    <div class="card">
+      <h3>Request Now</h3>
+      <p>Raise a new blood request.</p>
+      <button class="btn-action" data-modal="modal-request">Open</button>
+    </div>
+
+    <div class="card">
+      <h3>Find Donors</h3>
+      <p>View available donors.</p>
+      <button class="btn-action" data-modal="modal-donors">Open</button>
+    </div>
+
+    <div class="card">
+      <h3>View Analytics</h3>
+      <p>Check blood availability stats.</p>
+      <button class="btn-action" data-modal="modal-analytics">Open</button>
+    </div>
+
+    <div class="card">
+      <h3>Requesters</h3>
+      <p>View all raised blood requests.</p>
+      <button class="btn-action" id="open-requests-btn">Open</button>
+    </div>
+
+    <div class="card">
+      <h3>Add Donor</h3>
+      <p>Add a new donor to the system.</p>
+      <button class="btn-action" data-modal="modal-add-donor">Open</button>
+    </div>
+  </div>
+</div>
+
+<!-- Side Menu -->
+<div id="side-menu">
+  <ul>
+    <li><a href="#" data-modal="modal-request">Request Now</a></li>
+    <li><a href="#" data-modal="modal-donors">Find Donors</a></li>
+    <li><a href="#" data-modal="modal-analytics">Analytics</a></li>
+    <li><a href="#" id="side-requests-link">Requesters</a></li>
+    <li><a href="#" data-modal="modal-add-donor">Add Donor</a></li>
+  </ul>
+</div>
+
+<!-- Modals -->
+
+<!-- Blood Request Modal -->
+<div id="modal-request" class="modal">
+  <div class="modal-content">
+    <span class="close-btn">&times;</span>
+    <h3>Raise Blood Request</h3>
+    <form id="blood-request-form">
+      <input type="text" id="patient-name" placeholder="Patient Name" required>
+      <select id="blood-type" required>
+        <option value="">Select Blood Type</option>
+        <option>A+</option><option>B+</option><option>O+</option><option>AB+</option>
+        <option>A-</option><option>B-</option><option>O-</option><option>AB-</option>
+      </select>
+      <input type="number" id="units" placeholder="Units Required" required>
+      <input type="text" id="location" placeholder="Location" required>
+      <input type="text" id="contact" placeholder="Contact Number" required>
+      <button type="submit" class="btn-submit">Submit Request</button>
+      <div id="form-success" style="color:green; display:none;">Request submitted!</div>
+    </form>
+  </div>
+</div>
+
+<!-- Donors Modal -->
+<div id="modal-donors" class="modal">
+  <div class="modal-content">
+    <span class="close-btn">&times;</span>
+    <h3>Donors List</h3>
+    <input type="text" id="donor-search" placeholder="Search donors...">
+    <table id="donors-table">
+      <thead>
+        <tr><th>Name</th><th>Blood Type</th><th>Location</th><th>Contact</th></tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Analytics Modal -->
+<div id="modal-analytics" class="modal">
+  <div class="modal-content">
+    <span class="close-btn">&times;</span>
+    <h3>Analytics</h3>
+    <canvas id="analytics-chart" style="height:400px;"></canvas>
+  </div>
+</div>
+
+<!-- Add Donor Modal -->
+<div id="modal-add-donor" class="modal">
+  <div class="modal-content">
+    <span class="close-btn">&times;</span>
+    <h3>Add Donor</h3>
+    <form id="add-donor-form">
+      <input type="text" id="donor-name" placeholder="Donor Name" required>
+      <select id="donor-blood" required>
+        <option value="">Select Blood Type</option>
+        <option>A+</option><option>B+</option><option>O+</option><option>AB+</option>
+        <option>A-</option><option>B-</option><option>O-</option><option>AB-</option>
+      </select>
+      <input type="text" id="donor-location" placeholder="Location" required>
+      <input type="text" id="donor-contact" placeholder="Contact Number" required>
+      <button type="submit">Add Donor</button>
+    </form>
+  </div>
+</div>
+
+<!-- Requesters Modal (Dynamic) -->
+<div id="modal-requests" class="modal">
+  <div class="modal-content" style="max-height:80vh; overflow-y:auto;">
+    <span class="close-btn">&times;</span>
+    <h3>Requesters</h3>
+    <table id="requests-table">
+      <thead>
+        <tr>
+          <th>Patient</th><th>Blood Type</th><th>Units</th><th>Location</th><th>Contact</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
